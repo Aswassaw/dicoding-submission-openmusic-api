@@ -16,7 +16,6 @@ class AlbumsHandler {
 
     const response = h.response({
       status: "success",
-      message: "Catatan berhasil ditambahkan",
       data: {
         albumId,
       },
@@ -34,6 +33,29 @@ class AlbumsHandler {
       data: {
         album,
       },
+    };
+  }
+
+  async putAlbumByIdHandler(request) {
+    this._validator.validateAlbumPayload(request.payload);
+    const { id } = request.params;
+    const { name, year } = request.payload;
+
+    await this._service.editAlbumById(id, { name, year });
+
+    return {
+      status: "success",
+      message: "Album berhasil diperbarui",
+    };
+  }
+
+  async deleteAlbumByIdHandler(request) {
+    const { id } = request.params;
+    await this._service.deleteAlbumById(id);
+
+    return {
+      status: "success",
+      message: "Album berhasil dihapus",
     };
   }
 }
