@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
+const convertAllPropToCamel = require('../../utils/convertAllPropToCamel');
 const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 
@@ -56,7 +57,7 @@ class SongsService {
       throw new NotFoundError("Lagu tidak ditemukan");
     }
 
-    return result.rows[0];
+    return convertAllPropToCamel(result.rows[0]);
   }
 
   async editSongById(
