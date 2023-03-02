@@ -4,7 +4,10 @@
   "description": "Submission Open Music API dari kelas Dicoding Academy Belajar Fundamental Aplikasi Back-End",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "migrate": "node-pg-migrate"
   },
   "repository": {
     "type": "git",
@@ -20,5 +23,17 @@
   "bugs": {
     "url": "https://github.com/andry-pebrianto/dicoding-submission-openmusic-api/issues"
   },
-  "homepage": "https://github.com/andry-pebrianto/dicoding-submission-openmusic-api#readme"
+  "homepage": "https://github.com/andry-pebrianto/dicoding-submission-openmusic-api#readme",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.0",
+    "auto-bind": "^4.0.0",
+    "dotenv": "^16.0.3",
+    "joi": "^17.8.3",
+    "nanoid": "^3.1.23",
+    "node-pg-migrate": "^6.2.2",
+    "pg": "^8.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
