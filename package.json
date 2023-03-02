@@ -1,0 +1,24 @@
+{
+  "name": "dicoding-submission-openmusic-api",
+  "version": "1.0.0",
+  "description": "Submission Open Music API dari kelas Dicoding Academy Belajar Fundamental Aplikasi Back-End",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andry-pebrianto/dicoding-submission-openmusic-api.git"
+  },
+  "keywords": [
+    "hapijs",
+    "aws",
+    "dicoding"
+  ],
+  "author": "Andry Pebrianto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andry-pebrianto/dicoding-submission-openmusic-api/issues"
+  },
+  "homepage": "https://github.com/andry-pebrianto/dicoding-submission-openmusic-api#readme"
+}
