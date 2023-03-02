@@ -1,6 +1,6 @@
 const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
-const convertAllPropToCamel = require('../../utils/convertAllPropToCamel');
+const convertAllPropToCamel = require("../../utils/convertAllPropToCamel");
 const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 
@@ -38,10 +38,31 @@ class SongsService {
     return result.rows[0].id;
   }
 
-  async getSongs() {
-    const result = await this._pool.query(
-      "SELECT id, title, performer FROM songs",
-    );
+  async getSongs({ title, performer }) {
+    let query = {};
+
+    if (title && performer) {
+      query = {
+        text: "SELECT id, title, performer FROM songs WHERE LOWER(title) LIKE '%'||LOWER($1)||'%' AND LOWER(performer) LIKE '%'||LOWER($2)||'%'",
+        values: [title, performer],
+      };
+    } else if (title) {
+      query = {
+        text: "SELECT id, title, performer FROM songs WHERE LOWER(title) LIKE '%'||LOWER($1)||'%'",
+        values: [title],
+      };
+    } else if (performer) {
+      query = {
+        text: "SELECT id, title, performer FROM songs WHERE LOWER(performer) LIKE '%'||LOWER($1)||'%'",
+        values: [performer],
+      };
+    } else {
+      query = {
+        text: "SELECT id, title, performer FROM songs",
+      };
+    }
+
+    const result = await this._pool.query(query);
 
     return result.rows;
   }
@@ -60,10 +81,7 @@ class SongsService {
     return convertAllPropToCamel(result.rows[0]);
   }
 
-  async editSongById(
-    id,
-    { title, year, genre, performer, duration, albumId },
-  ) {
+  async editSongById(id, { title, year, genre, performer, duration, albumId }) {
     const updatedAt = new Date().toISOString();
 
     const query = {
