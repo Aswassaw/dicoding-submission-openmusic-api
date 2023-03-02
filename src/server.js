@@ -1,8 +1,8 @@
 require("dotenv").config();
 
 const Hapi = require("@hapi/hapi");
-const albums = require('./api/albums')
-const AlbumsValidator = require('./validator/albums')
+const albums = require("./api/albums");
+const AlbumsValidator = require("./validator/albums");
 const AlbumsService = require("./services/postgres/AlbumsService");
 const ClientError = require("./exceptions/ClientError");
 
@@ -25,12 +25,10 @@ const init = async () => {
     {
       method: "GET",
       path: "/",
-      handler: (req, h) => {
-        return {
-          status: "success",
-          message: "Web Service Online",
-        };
-      },
+      handler: () => ({
+        status: "success",
+        message: "Web Service Online",
+      }),
     },
   ]);
 
@@ -40,8 +38,8 @@ const init = async () => {
     options: {
       service: albumsService,
       validator: AlbumsValidator,
-    }
-  })
+    },
+  });
 
   // error handler
   server.ext("onPreResponse", (request, h) => {
