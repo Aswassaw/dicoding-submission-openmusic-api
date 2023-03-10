@@ -18,6 +18,8 @@
         "import/no-extraneous-dependencies": "off",
         "no-unused-expressions": "off",
         "guard-for-in": "off",
-        "no-restricted-syntax": "off"
+        "no-restricted-syntax": "off",
+        "implicit-arrow-linebreak": "off",
+        "comma-dangle": "off"
     }
 }
