@@ -20,6 +20,7 @@
         "guard-for-in": "off",
         "no-restricted-syntax": "off",
         "implicit-arrow-linebreak": "off",
-        "comma-dangle": "off"
+        "comma-dangle": "off",
+        "operator-linebreak": "off"
     }
 }

@@ -2,7 +2,7 @@
 
 exports.shorthands = undefined;
 
-exports.up = pgm => {
+exports.up = (pgm) => {
   pgm.addConstraint(
     "playlists",
     "fk-playlists.owner-users.id",
@@ -22,8 +22,11 @@ exports.up = pgm => {
   );
 };
 
-exports.down = pgm => {
+exports.down = (pgm) => {
   pgm.dropConstraint("playlists", "fk-playlists.owner-users.id");
-  pgm.dropConstraint("playlist_songs", "fk-playlist_songs.playlist_id-playlists.id");
+  pgm.dropConstraint(
+    "playlist_songs",
+    "fk-playlist_songs.playlist_id-playlists.id"
+  );
   pgm.dropConstraint("playlist_songs", "fk-playlist_songs.song_id-songs.id");
 };
