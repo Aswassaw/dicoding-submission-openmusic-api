@@ -30,6 +30,10 @@ const CollaborationsValidator = require("./validator/collaborations");
 // activities
 const activities = require("./api/activities");
 const ActivitiesService = require("./services/postgres/ActivitiesService");
+// exports
+const _exports = require("./api/exports");
+const ProducerService = require("./services/rabbitmq/ProducerService");
+const ExportsValidator = require("./validator/exports");
 
 const ClientError = require("./exceptions/ClientError");
 
@@ -44,7 +48,7 @@ const init = async () => {
 
   // server configuration
   const server = Hapi.server({
-    port: process.env.PORT || 5100,
+    port: process.env.PORT || 5000,
     host: process.env.HOST || "localhost",
     routes: {
       cors: {
@@ -141,6 +145,14 @@ const init = async () => {
       options: {
         activitiesService,
         playlistsService,
+      },
+    },
+    {
+      plugin: _exports,
+      options: {
+        playlistsService,
+        exportsService: ProducerService,
+        validator: ExportsValidator,
       },
     },
   ]);
