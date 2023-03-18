@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const { nanoid } = require("nanoid");
+const config = require("../../utils/config");
 
 class StorageService {
   constructor() {
@@ -8,7 +9,7 @@ class StorageService {
 
   writeFile(file, meta) {
     const parameter = {
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: config.s3.bucketName,
       Key: `${nanoid(20)}-${meta.filename}`,
       Body: file._data,
       ContentType: meta.headers["content-type"],

@@ -41,6 +41,7 @@ const StorageService = require("./services/s3storage/StorageService");
 const CacheService = require('./services/rediscache/CacheService');
 
 const ClientError = require("./exceptions/ClientError");
+const config = require("./utils/config");
 
 const init = async () => {
   const cacheService = new CacheService();
@@ -55,8 +56,8 @@ const init = async () => {
 
   // server configuration
   const server = Hapi.server({
-    port: process.env.PORT || 5000,
-    host: process.env.HOST || "localhost",
+    port: config.app.port || 5000,
+    host: config.app.host || "localhost",
     routes: {
       cors: {
         origin: ["*"],
@@ -86,12 +87,12 @@ const init = async () => {
   ]);
 
   server.auth.strategy("jwt_middleware", "jwt", {
-    keys: process.env.ACCESS_TOKEN_KEY,
+    keys: config.jwt.accessToken,
     verify: {
       aud: false,
       iss: false,
       sub: false,
-      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+      maxAgeSec: config.jwt.expired,
     },
     validate: (artifacts) => ({
       isValid: true,
