@@ -70,7 +70,10 @@ class AlbumsHandler {
 
     const { id } = request.params;
 
-    const fileLocation = await this._storageService.writeFile(cover, cover.hapi);
+    const fileLocation = await this._storageService.writeFile(
+      cover,
+      cover.hapi
+    );
     await this._albumsService.editAlbumCoverUrl(id, fileLocation);
 
     const response = h.response({
@@ -79,6 +82,45 @@ class AlbumsHandler {
     });
     response.code(201);
     return response;
+  }
+
+  async postLikeAlbumHandler(request, h) {
+    const { id } = request.params;
+    const { credentialId } = request.auth.credentials;
+
+    await this._albumsService.getAlbumById(id);
+    const likeStatus = await this._albumsService.verifyAlbumAlreadyLiked(
+      credentialId,
+      id
+    );
+
+    if (likeStatus.length) {
+      await this._albumsService.unlikeAlbum(credentialId, id);
+    } else {
+      await this._albumsService.likeAlbum(credentialId, id);
+    }
+
+    const response = h.response({
+      status: "success",
+      message: likeStatus.length
+        ? "Berhasil batal menyukai album"
+        : "Berhasil menyukai album",
+    });
+    response.code(201);
+    return response;
+  }
+
+  async getCouuntLikeAlbumHandler(request) {
+    const { id } = request.params;
+
+    const likeCount = await this._albumsService.getCountAlbumLike(id);
+
+    return {
+      status: "success",
+      data: {
+        likes: parseInt(likeCount.count, 10),
+      },
+    };
   }
 }
 

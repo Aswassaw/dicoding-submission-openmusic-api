@@ -9,6 +9,7 @@ class AlbumsService {
     this._pool = new Pool();
   }
 
+  // albums
   async addAlbum({ name, year }) {
     const id = nanoid(16);
     const createdAt = new Date().toISOString();
@@ -90,8 +91,51 @@ class AlbumsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError("Gagal memperbarui cover album. Id tidak ditemukan");
+      throw new NotFoundError(
+        "Gagal memperbarui cover album. Id tidak ditemukan"
+      );
     }
+  }
+
+  // user_album_likes
+  async verifyAlbumAlreadyLiked(userId, albumId) {
+    const query = {
+      text: "SELECT * FROM user_album_likes WHERE user_id = $1 AND album_id = $2",
+      values: [userId, albumId],
+    };
+    const result = await this._pool.query(query);
+
+    return result.rows;
+  }
+
+  async likeAlbum(userId, albumId) {
+    const id = nanoid(16);
+
+    const query = {
+      text: "INSERT INTO user_album_likes VALUES($1, $2, $3) RETURNING id",
+      values: [id, userId, albumId],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async unlikeAlbum(userId, albumId) {
+    const query = {
+      text: "DELETE FROM user_album_likes WHERE user_id = $1 AND album_id = $2",
+      values: [userId, albumId],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async getCountAlbumLike(albumId) {
+    const query = {
+      text: "SELECT COUNT(*) FROM user_album_likes WHERE album_id = $1",
+      values: [albumId],
+    };
+    const result = await this._pool.query(query);
+
+    return result.rows[0];
   }
 }
 
