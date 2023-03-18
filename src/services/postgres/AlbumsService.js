@@ -5,8 +5,9 @@ const NotFoundError = require("../../exceptions/NotFoundError");
 const convertAllPropToCamel = require("../../utils/convertAllPropToCamel");
 
 class AlbumsService {
-  constructor() {
+  constructor(cacheService) {
     this._pool = new Pool();
+    this._cacheService = cacheService;
   }
 
   // albums
@@ -117,6 +118,7 @@ class AlbumsService {
     };
 
     await this._pool.query(query);
+    await this._cacheService.delete(`album-likes:${albumId}`);
   }
 
   async unlikeAlbum(userId, albumId) {
@@ -126,16 +128,35 @@ class AlbumsService {
     };
 
     await this._pool.query(query);
+    await this._cacheService.delete(`album-likes:${albumId}`);
   }
 
   async getCountAlbumLike(albumId) {
-    const query = {
-      text: "SELECT COUNT(*) FROM user_album_likes WHERE album_id = $1",
-      values: [albumId],
-    };
-    const result = await this._pool.query(query);
+    try {
+      // mendapatkan data like dari cache
+      const result = await this._cacheService.get(`album-likes:${albumId}`);
+      return {
+        source: "cache",
+        data: JSON.parse(result),
+      };
+    } catch (error) {
+      const query = {
+        text: "SELECT COUNT(*) FROM user_album_likes WHERE album_id = $1",
+        values: [albumId],
+      };
+      const result = await this._pool.query(query);
 
-    return result.rows[0];
+      // menyimpan data like ke cache
+      await this._cacheService.set(
+        `album-likes:${albumId}`,
+        JSON.stringify(result.rows[0])
+      );
+
+      return {
+        source: "db",
+        data: result.rows[0],
+      };
+    }
   }
 }
 

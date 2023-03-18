@@ -9,8 +9,8 @@ class ExportsHandler {
     autoBind(this);
   }
 
-  async postExportNotesHandler(request, h) {
-    this._validator.validateExportNotesPayload(request.payload);
+  async postExportPlaylistSongsHandler(request, h) {
+    this._validator.validateExportPlaylistSongsPayload(request.payload);
 
     const { playlistId } = request.params;
     const { credentialId } = request.auth.credentials;

@@ -37,11 +37,14 @@ const ProducerService = require("./services/rabbitmq/ProducerService");
 const ExportsValidator = require("./validator/exports");
 // uploads
 const StorageService = require("./services/s3storage/StorageService");
+// cache
+const CacheService = require('./services/rediscache/CacheService');
 
 const ClientError = require("./exceptions/ClientError");
 
 const init = async () => {
-  const albumsService = new AlbumsService();
+  const cacheService = new CacheService();
+  const albumsService = new AlbumsService(cacheService);
   const songsService = new SongsService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
